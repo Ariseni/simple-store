@@ -2,13 +2,12 @@
 
 import { ProductFilter } from "@/components/Filter";
 import { ProductsGrid } from "@/components/products/ProductsGrid";
-import { useFilter } from "@/hooks/useFilter";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect } from "react";
 import axios from "axios";
-import { pages } from "next/dist/build/templates/app-page";
+import { useFilterContext } from "@/context/FilterContext";
 
 export default function ProductsPage() {
-  const { query, data, setData, ...rest } = useFilter();
+  const { query, setData } = useFilterContext();
   useEffect(() => {
     // Fetch products by category or search for products
     axios.get(query).then((res) => {
@@ -17,47 +16,41 @@ export default function ProductsPage() {
   }, [query]);
 
   return (
-    <div className="flex w-full h-[calc(100vh-160px)]">
-      <div className="flex justify-center bg-white min-w-20">
-        <ProductFilter {...rest} />
+    <div className="flex flex-col xl:flex-row w-full h-[100vh]">
+      <div className="flex justify-center bg-white min-w-[300px]">
+        <ProductFilter />
       </div>
-      <div className="flex flex-col w-full">
-        <ProductsGrid products={data.products} />
-        <PaginationFilter totalItems={data.total} {...rest} />
+      <div className="flex flex-col w-full h-full">
+        <PaginationFilter />
+        <ProductsGrid />
       </div>
     </div>
   );
 }
-type Pagination = {
-  totalItems: number;
-  pageSize: number;
-  setPageSize: (value: number) => void;
-  page: number;
-  setPage: (value: number) => void;
-};
-const PaginationFilter = ({
-  pageSize,
-  setPageSize,
-  setPage,
-  page: currentPage,
-  totalItems,
-}: Pagination) => {
+const PaginationFilter = () => {
+  const {
+    data,
+    pageSize,
+    page: currentPage,
+    setPage,
+    setPageSize,
+  } = useFilterContext();
   const pageSizes = [10, 25, 50];
-  const totalPages = Math.ceil(totalItems / pageSize);
+  const totalPages = Math.ceil(data.total / pageSize);
   const pages = Array.from({
     length: totalPages,
   }).map((_, index) => index);
 
   const visiblePages = pages.filter((page: number) => {
     return (
-      page === 1 || // Always show the first page
-      page === pages.length || // Always show the last page
+      page === 0 || // Always show the first page
+      page === pages.length - 1 || // Always show the last page
       (page >= currentPage - 2 && page <= currentPage + 2) // Show 2 pages before and 2 pages after the current page
     );
   });
 
   return (
-    <div className="flex space-x-4 px-20 bg-white">
+    <div className="flex space-x-4 px-20 bg-white pb-5">
       <div className="flex flex-grow items-center justify-center space-x-2 mt-4">
         {/* Render Pagination */}
         {visiblePages.map((page, index) => (
@@ -70,11 +63,13 @@ const PaginationFilter = ({
             {/* Render Page Numbers */}
             <button
               className={`px-4 py-2 rounded ${
-                page === currentPage ? "bg-blue-500 text-white" : "bg-gray-200"
+                page === currentPage
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-black"
               }`}
               onClick={() => setPage(page)}
             >
-              {page}
+              {page + 1}
             </button>
           </Fragment>
         ))}

@@ -1,17 +1,24 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { CartItem, useCart } from "@/hooks/useCart";
+import dynamic from "next/dynamic";
 
 export default function Cart() {
-  const { data: session } = useSession();
-  const router = useRouter();
-
-  if (!session) {
-    return router.replace("/login");
-  }
+  const { cart } = useCart();
 
   return (
-    <div className="pt-20 bg-red-500">Welcome, {session.user.username}!</div>
+    <div className=" bg-red-500">
+      {cart.map((item) => (
+        <Item {...item} />
+      ))}
+    </div>
   );
 }
+
+const Item = ({ id, title, quantity }: CartItem) => {
+  return (
+    <div>
+      Id: {id} Title: {title} Quantity: {quantity}
+    </div>
+  );
+};

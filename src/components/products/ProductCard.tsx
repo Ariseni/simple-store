@@ -1,5 +1,6 @@
 "use client";
 
+import { trimText } from "@/utils/text";
 import { useSession } from "next-auth/react";
 
 enum Stock {
@@ -26,20 +27,23 @@ export const ProductCard = ({
   description,
   id,
 }: Product) => {
-  const { data: session } = useSession();
   return (
-    <div className="p-5 bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-200">
+    <div className="flex justify-between flex-col p-5 bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-200 sm:max-h-[420px] sm:max-w-full lg:max-w-[300px] min-w-[300px] max-w-full">
       {/* Thumbnail */}
-      <img
-        src={thumbnail}
-        alt={title}
-        className="w-full h-40 object-cover rounded-md mb-4"
-      />
+      <div>
+        <img
+          src={thumbnail}
+          alt={title}
+          className="w-full h-40 object-contain rounded-md mb-4"
+        />
 
-      {/* Title */}
-      <h3 className="text-lg font-semibold mb-2">{title}</h3>
+        {/* Title */}
+        <h3 className="text-lg font-semibold mb-2">{title}</h3>
 
-      <h5 className="text-lg text-gray-700 mb-2">{description}</h5>
+        <span className="text-md mb-2 whitespace-normal ">
+          {trimText(description)}
+        </span>
+      </div>
       {/* Price, rating, and Stock Availability in a row */}
       <div className="flex justify-between items-center mt-4">
         <span className="text-gray-700 font-bold">{price}€</span>
