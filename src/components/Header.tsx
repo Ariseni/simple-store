@@ -2,14 +2,23 @@
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Login from "./Login";
 import { CartItem, useCart } from "@/hooks/useCart";
 
 const Header = () => {
   const { data: sessionData } = useSession();
   const [showLoginDropdown, setShowLoginDropdown] = useState(false);
-  const { cart } = useCart();
+  const [cart, setCart] = useState<CartItem[]>([]);
+
+  //cannot use useLocalStorage or useCart here due to it being prerendered on server
+  //also wouldn't want to prevent SSR with dynamic import to avoid render delay
+  useEffect(() => {
+    const cartLocalStorage = localStorage.getItem("cart");
+    if (cartLocalStorage) {
+      setCart(JSON.parse(cartLocalStorage));
+    }
+  }, []);
 
   const toggleShowLoginDropdown = () => {
     setShowLoginDropdown((prev) => !prev);
@@ -17,7 +26,7 @@ const Header = () => {
 
   // Calculate total quantity of items in the cart
   const totalQuantity =
-    cart?.reduce((acc: number, item: CartItem) => acc + item.quantity, 0) || 0;
+    cart.reduce((acc: number, item: CartItem) => acc + item.quantity, 0) || 0;
 
   return (
     <header

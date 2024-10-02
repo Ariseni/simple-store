@@ -10,7 +10,7 @@ export type CartItem = {
 
 export const useCart = () => {
   const [cart, saveCart] = useLocalStorage<CartItem[]>("cart", []);
-  console.log(cart);
+
   const addProduct = (id: number, title: string) => {
     // Create a copy of the cart to avoid direct mutation
     const updatedCart = [...cart];

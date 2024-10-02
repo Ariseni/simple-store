@@ -1,13 +1,9 @@
 "use client";
 
+import Header from "@/components/Header";
 import "./globals.css";
 import Provider from "./providers/Provider";
 import { FilterProvider } from "@/context/FilterContext";
-import dynamic from "next/dynamic";
-
-const NoSSRHeader = dynamic(() => import("../components/Header"), {
-  ssr: false,
-});
 
 export default function RootLayout({
   children,
@@ -18,7 +14,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Provider>
-          <NoSSRHeader />
+          <Header />
           <FilterProvider>
             <main className="pt-20 flex flex-grow h-full">{children}</main>
           </FilterProvider>
