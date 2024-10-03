@@ -16,13 +16,13 @@ export default function ProductsPage() {
   }, [query]);
 
   return (
-    <div className="flex flex-col xl:flex-row w-full h-[100vh]">
-      <div className="flex justify-center bg-white min-w-[300px]">
+    <div className="flex flex-col xl:flex-row w-full mt-20">
+      <div className="flex justify-center bg-white min-w-10 h-full">
         <ProductFilter />
       </div>
-      <div className="flex flex-col w-full h-full">
-        <PaginationFilter />
+      <div className="flex flex-col w-full">
         <ProductsGrid />
+        <PaginationFilter />
       </div>
     </div>
   );
@@ -50,8 +50,8 @@ const PaginationFilter = () => {
   });
 
   return (
-    <div className="flex space-x-4 px-20 bg-white pb-5">
-      <div className="flex flex-grow items-center justify-center space-x-2 mt-4">
+    <div className="flex w-full px-6 md:px-20 bg-white h-20 fixed md:relative bottom-0 justify-between items-center">
+      <div className="flex md:flex-grow items-center justify-center space-x-2">
         {/* Render Pagination */}
         {visiblePages.map((page, index) => (
           <Fragment key={page}>
@@ -74,7 +74,7 @@ const PaginationFilter = () => {
           </Fragment>
         ))}
       </div>
-      <div className="">
+      <div>
         <label className="block text-gray-700 font-semibold">
           Items per page
         </label>

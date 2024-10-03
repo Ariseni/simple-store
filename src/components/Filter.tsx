@@ -1,6 +1,5 @@
 "use client";
 
-import { useFilter } from "@/hooks/useFilter";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useFilterContext } from "@/context/FilterContext";
@@ -42,12 +41,11 @@ export const ProductFilter = () => {
   }, []);
 
   return (
-    <div className="p-4 w-full">
+    <div className="p-4 w-full h-full">
       <div className="flex justify-end">
-        <button onClick={toggleFilters} className="text-black">
+        <button onClick={toggleFilters} className="text-black p-4">
           {showFilters ? "X" : ">>"}
         </button>
-        ;
       </div>
       {/* Filter Section */}
       {showFilters && (

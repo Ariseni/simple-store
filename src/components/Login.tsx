@@ -3,7 +3,10 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 
-export default function Login() {
+type LoginProps = {
+  isDropdown: boolean;
+};
+export default function Login({ isDropdown }: LoginProps) {
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
@@ -27,7 +30,11 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col p-5 mt-5 bg-white rounded-bl-lg bg-[#] absolute right-0 shadow-2xl z-10">
+    <div
+      className={`flex flex-col p-5 mt-5 bg-white rounded-bl-lg bg-[#] ${
+        isDropdown ? "absolute" : ""
+      } right-0 shadow-2xl z-10`}
+    >
       <form onSubmit={handleSubmit} className="flex gap-5 flex-col">
         <InputWithLabel
           text="Username"
@@ -39,7 +46,7 @@ export default function Login() {
           defaultValue="emilyspass"
           id="passwordInput"
         />
-        <button type="submit" className="bg-blue-500 rounded-md">
+        <button type="submit" className="bg-blue-500 rounded-md py-4">
           Sign In
         </button>
         {message && <p>{message}</p>}

@@ -16,7 +16,7 @@ export default function RootLayout({
         <Provider>
           <Header />
           <FilterProvider>
-            <main className="pt-20 flex flex-grow h-full">{children}</main>
+            <main className="flex flex-grow">{children}</main>
           </FilterProvider>
         </Provider>
       </body>

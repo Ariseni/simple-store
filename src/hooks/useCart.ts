@@ -31,24 +31,30 @@ export const useCart = () => {
   };
 
   const removeProduct = (id: number) => {
-    const updatedCart = cart.filter((item) => item.id !== id);
+    // Create a shallow copy of the cart
+    const updatedCart = [...cart];
 
-    // Update the cart quantity if the item exists
     const existingProductIndex = cart.findIndex((item) => item.id === id);
+
     if (existingProductIndex !== -1) {
-      if (cart[existingProductIndex].quantity > 1) {
-        // Decrease the quantity
-        const newQuantity = cart[existingProductIndex].quantity - 1;
-        updatedCart.splice(existingProductIndex, 1, {
-          ...cart[existingProductIndex],
-          quantity: newQuantity,
-        });
+      const product = cart[existingProductIndex];
+
+      if (product.quantity > 1) {
+        updatedCart[existingProductIndex] = {
+          ...product,
+          quantity: product.quantity - 1,
+        };
+      } else {
+        updatedCart.splice(existingProductIndex, 1);
       }
     }
 
-    // Save the updated cart back to local storage
     saveCart(updatedCart);
   };
 
-  return { cart, addProduct, removeProduct };
+  const emptyCart = () => {
+    saveCart([]);
+  };
+
+  return { cart, addProduct, removeProduct, emptyCart };
 };
