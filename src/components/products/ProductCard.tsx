@@ -5,6 +5,7 @@ import { trimText } from "@/utils/text";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Toast } from "../Toast";
+import { Button } from "../Button";
 
 enum Stock {
   IN_STOCK = "In Stock",
@@ -21,7 +22,7 @@ export type Product = {
   availabilityStatus: Stock;
 };
 
-export const ProductCard = ({
+export function ProductCard({
   title,
   thumbnail,
   price,
@@ -29,7 +30,7 @@ export const ProductCard = ({
   availabilityStatus,
   description,
   id,
-}: Product) => {
+}: Product) {
   const { addProduct } = useCart();
   const [toastVisible, setToastVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -80,13 +81,12 @@ export const ProductCard = ({
           {availabilityStatus}
         </span>
       </div>
-      <button
-        className="bg-blue-500 rounded-lg p-[8px_8px] text-white font-semibold hover:opacity-90 disabled:bg-gray-500"
+      <Button
+        className="bg-blue-500 rounded-lg p-[8px_8px] text-white font-semibold"
         onClick={handleAddProduct}
         disabled={loading}
-      >
-        {loading ? "Adding to cart..." : "Add to cart"}
-      </button>
+        text={loading ? "Adding to cart..." : "Add to cart"}
+      />
     </div>
   );
-};
+}

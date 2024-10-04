@@ -2,6 +2,7 @@
 
 import { signIn } from "next-auth/react";
 import { useState } from "react";
+import { Button } from "./Button";
 
 type LoginProps = {
   isDropdown: boolean;
@@ -36,35 +37,30 @@ export default function Login({ isDropdown }: LoginProps) {
       } right-0 shadow-2xl z-10`}
     >
       <form onSubmit={handleSubmit} className="flex gap-5 flex-col">
-        <InputWithLabel
-          text="Username"
-          defaultValue="emilys"
-          id="usernameInput"
-        />
-        <InputWithLabel
+        <FormInput text="Username" defaultValue="emilys" id="usernameInput" />
+        <FormInput
           text="Password"
           defaultValue="emilyspass"
           id="passwordInput"
         />
-        <button type="submit" className="bg-blue-500 rounded-md py-4">
-          Sign In
-        </button>
+        <Button
+          type="submit"
+          className="bg-blue-500 rounded-md py-4 text-white font-bold"
+          text="Sign In"
+        />
+
         {message && <p>{message}</p>}
       </form>
     </div>
   );
 }
 
-type InputWithLabelProps = {
+type FormInputProps = {
   text: string;
   defaultValue: string;
   id: string;
 };
-export const InputWithLabel = ({
-  text,
-  defaultValue,
-  id,
-}: InputWithLabelProps) => {
+export function FormInput({ text, defaultValue, id }: FormInputProps) {
   return (
     <div className="flex flex-col w-full gap-1 justify-between items-start">
       <label className="font-semibold">{text}</label>
@@ -77,4 +73,4 @@ export const InputWithLabel = ({
       />
     </div>
   );
-};
+}

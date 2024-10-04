@@ -8,10 +8,10 @@ export type CartItem = {
   title: string;
 };
 
-export const useCart = () => {
+export function useCart() {
   const [cart, saveCart] = useLocalStorage<CartItem[]>("cart", []);
 
-  const addProduct = (id: number, title: string) => {
+  function addProduct(id: number, title: string) {
     // Create a copy of the cart to avoid direct mutation
     const updatedCart = [...cart];
 
@@ -28,9 +28,9 @@ export const useCart = () => {
 
     // Save the updated cart back to local storage
     saveCart(updatedCart);
-  };
+  }
 
-  const removeProduct = (id: number) => {
+  function removeProduct(id: number) {
     // Create a shallow copy of the cart
     const updatedCart = [...cart];
 
@@ -50,11 +50,11 @@ export const useCart = () => {
     }
 
     saveCart(updatedCart);
-  };
+  }
 
-  const emptyCart = () => {
+  function emptyCart() {
     saveCart([]);
-  };
+  }
 
   return { cart, addProduct, removeProduct, emptyCart };
-};
+}

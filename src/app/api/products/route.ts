@@ -1,5 +1,3 @@
-// /app/api/products/route.ts
-
 import { NextResponse } from "next/server";
 
 const defaultTake = 10;
@@ -8,37 +6,33 @@ const defaultTake = 10;
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  // Extract query parameters
-  const id = searchParams.get("id"); // For single product
-  const searchQuery = searchParams.get("q"); // For searching products
-  const category = searchParams.get("category"); // For products by category
-  const limit = searchParams.get("limit"); // For limiting results
-  const skip = searchParams.get("skip"); // For skipping results
-  const sort = searchParams.get("sort"); // For sorting results
-  const select = searchParams.get("select"); // For selecting specific fields
+  const id = searchParams.get("id");
+  const searchQuery = searchParams.get("q");
+  const category = searchParams.get("category");
+  const limit = searchParams.get("limit");
+  const skip = searchParams.get("skip");
+  const sortBy = searchParams.get("sortBy");
+  const order = searchParams.get("order");
 
   let apiUrl = "https://dummyjson.com/products";
 
   const queryParameters = [];
 
-  // If the `id` query param is present, fetch a single product
   if (id) {
     apiUrl = `https://dummyjson.com/products/${id}`;
   } else {
-    // If `category` query param is present, fetch products by category
     if (category) {
       apiUrl = `https://dummyjson.com/products/category/${category}`;
     } else if (searchQuery) {
-      // If the `q` query param is present, search products
       apiUrl = `https://dummyjson.com/products/search?q=${searchQuery}`;
     } else {
-      // Collect optional query parameters
       queryParameters.push(`limit=${limit || defaultTake}`);
       if (skip)
         queryParameters.push(
           `skip=${parseInt(skip) * (limit ? parseInt(limit) : defaultTake)}`
         );
-      if (sort) queryParameters.push(`sort=${sort}`);
+      if (sortBy) queryParameters.push(`sortBy=${sortBy}`);
+      if (order) queryParameters.push(`order=${order}`);
 
       // Add select parameters
       queryParameters.push(

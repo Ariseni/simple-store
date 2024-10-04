@@ -1,6 +1,6 @@
 "use client";
 
-import Header from "@/components/Header";
+import { Header } from "@/components/Header";
 import "./globals.css";
 import Provider from "./providers/Provider";
 import { FilterProvider } from "@/context/FilterContext";

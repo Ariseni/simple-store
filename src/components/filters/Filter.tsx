@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useFilterContext } from "@/context/FilterContext";
+import { SortOptions, useFilterContext } from "@/context/FilterContext";
+import { LabelInput } from "../LabelInput";
+import { Button } from "../Button";
 
-export const ProductFilter = () => {
+export function ProductFilter() {
   const {
     setSearchTerm,
     category,
@@ -13,6 +15,8 @@ export const ProductFilter = () => {
     setMinPrice,
     maxPrice,
     setMaxPrice,
+    sortBy,
+    setSortBy,
   } = useFilterContext();
   const [localSearch, setLocalSearch] = useState("");
   const [showFilters, setShowFilters] = useState(true);
@@ -29,9 +33,9 @@ export const ProductFilter = () => {
     };
   }, [localSearch]);
 
-  const toggleFilters = () => {
+  function toggleFilters() {
     setShowFilters((value) => !value);
-  };
+  }
 
   useEffect(() => {
     // Fetch products by category or search for products
@@ -41,11 +45,13 @@ export const ProductFilter = () => {
   }, []);
 
   return (
-    <div className="p-4 w-full h-full">
+    <div className="p-4 w-full h-full pt-20">
       <div className="flex justify-end">
-        <button onClick={toggleFilters} className="text-black p-4">
-          {showFilters ? "X" : ">>"}
-        </button>
+        <Button
+          onClick={toggleFilters}
+          className="text-black p-4"
+          text={showFilters ? "X" : ">>"}
+        />
       </div>
       {/* Filter Section */}
       {showFilters && (
@@ -65,7 +71,22 @@ export const ProductFilter = () => {
               </option>
               {categories.map((category) => (
                 <option value={category} key={category}>
-                  {category.toUpperCase()}
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+          {/* SortBy Filter */}
+          <div className="mb-4">
+            <label className="block text-gray-700 font-semibold">Sort by</label>
+            <select
+              className="mt-1 block w-full border text-gray-700 border-gray-300 rounded-md p-2"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOptions)}
+            >
+              {Object.values(SortOptions).map((value) => (
+                <option value={value} key={value}>
+                  {value}
                 </option>
               ))}
             </select>
@@ -85,31 +106,15 @@ export const ProductFilter = () => {
 
           {/* Price Filter */}
           <div className="mb-4 flex space-x-4">
-            <div className="flex-1">
-              <label className="block text-gray-700 font-semibold">
-                Min Price (€)
-              </label>
-              <input
-                type="number"
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                value={minPrice}
-                onChange={(e) => setMinPrice(parseFloat(e.target.value))}
-              />
-            </div>
-            <div className="flex-1">
-              <label className="block text-gray-700 font-semibold">
-                Max Price (€)
-              </label>
-              <input
-                type="number"
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(parseFloat(e.target.value))}
-              />
-            </div>
+            <LabelInput
+              label={"Min Price (€)"}
+              value={0}
+              setValue={setMinPrice}
+            />
+            <LabelInput label={"Max Price (€)"} setValue={setMaxPrice} />
           </div>
         </div>
       )}
     </div>
   );
-};
+}

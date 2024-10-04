@@ -1,23 +1,24 @@
 "use client";
+
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Login from "./Login";
-import { CartItem, useCart } from "@/hooks/useCart";
 import dynamic from "next/dynamic";
+import { Button } from "./Button";
 
 const Cart = dynamic(() => import("../components/cart/HeaderCart"), {
   ssr: false,
 });
 
-const Header = () => {
+export function Header() {
   const { data: sessionData } = useSession();
   const [showLoginDropdown, setShowLoginDropdown] = useState(false);
 
-  const toggleShowLoginDropdown = () => {
+  function toggleShowLoginDropdown() {
     setShowLoginDropdown((prev) => !prev);
-  };
+  }
 
   return (
     <header
@@ -37,23 +38,21 @@ const Header = () => {
           {sessionData ? (
             <div className="flex gap-5 items-center justify-center">
               <label className="text-white">{sessionData.user.firstName}</label>
-              <button
+              <Button
                 className="flex flex-col gap-1 justify-center items-center text-white bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded"
                 onClick={async () => {
                   await signOut({ redirect: true, callbackUrl: "/" });
                 }}
-              >
-                Logout
-              </button>
+                text="Logout"
+              />
             </div>
           ) : (
             <div>
-              <button
+              <Button
                 className="text-white bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded h-full"
                 onClick={toggleShowLoginDropdown}
-              >
-                Login
-              </button>
+                text="Login"
+              />
               {showLoginDropdown && <Login isDropdown />}
             </div>
           )}
@@ -61,6 +60,4 @@ const Header = () => {
       </nav>
     </header>
   );
-};
-
-export default Header;
+}
