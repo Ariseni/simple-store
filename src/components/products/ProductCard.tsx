@@ -2,8 +2,7 @@
 
 import { useCart } from "@/hooks/useCart";
 import { trimText } from "@/utils/text";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { MouseEventHandler, useRef, useState } from "react";
 import { Toast } from "../Toast";
 import { Button } from "../Button";
 
@@ -34,6 +33,7 @@ export function ProductCard({
   const { addProduct } = useCart();
   const [toastVisible, setToastVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   function handleAddProduct() {
     setLoading(true);
@@ -46,7 +46,10 @@ export function ProductCard({
     }, 200);
   }
   return (
-    <div className="flex justify-between flex-col p-5 bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-200 sm:max-h-[500px] sm:max-w-full lg:max-w-[300px] min-w-[300px] max-w-full">
+    <div
+      onClick={() => setIsModalOpen(true)}
+      className="flex justify-between flex-col p-5 bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-200 sm:max-h-[500px] sm:max-w-full lg:max-w-[300px] min-w-[300px] max-w-full"
+    >
       {toastVisible && (
         <Toast
           message={"Product added"}
@@ -83,10 +86,123 @@ export function ProductCard({
       </div>
       <Button
         className="bg-blue-500 rounded-lg p-[8px_8px] text-white font-semibold"
-        onClick={handleAddProduct}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleAddProduct();
+        }}
         disabled={loading}
         text={loading ? "Adding to cart..." : "Add to cart"}
       />
+      {isModalOpen && (
+        <ProductModal
+          id={id}
+          title={title}
+          price={price}
+          rating={rating}
+          availability={availabilityStatus}
+          description={description}
+          thumbnail={thumbnail}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
+
+import React from "react";
+
+interface ProductModalProps {
+  id: number;
+  title: string;
+  price: number;
+  rating: number;
+  availability: Stock;
+  description: string;
+  thumbnail: string;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const ProductModal: React.FC<ProductModalProps> = ({
+  title,
+  price,
+  rating,
+  availability,
+  description,
+  thumbnail,
+  isOpen,
+  onClose,
+}) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  if (!isOpen) return null;
+
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log(
+      "click",
+      modalRef.current,
+      !modalRef.current?.contains(e.target as Node)
+    );
+    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+      console.log("onclose");
+      onClose();
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      onClick={handleOverlayClick}
+    >
+      <div
+        ref={modalRef}
+        className="relative w-full max-w-lg p-6 mx-auto bg-white rounded-lg shadow-lg"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+          onClick={onClose}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <div className="flex flex-col space-y-4">
+          <img
+            src={thumbnail}
+            alt={title}
+            className="object-contain w-full h-40 rounded-md"
+          />
+          <h2 className="text-lg font-semibold mb-2">{title}</h2>
+          <p className="text-md text-gray-600">{description}</p>
+          <div className="flex justify-between">
+            <p className="text-lg font-bold text-gray-700">{price}€</p>
+            <p className="text-sm text-yellow-500">⭐ {rating}/5</p>
+            <p
+              className={`text-sm ${
+                availability ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {availability ? "In Stock" : "Out of Stock"}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProductModal;
