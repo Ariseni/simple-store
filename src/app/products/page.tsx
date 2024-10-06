@@ -11,7 +11,6 @@ import { PaginationFilter } from "@/components/filters/PaginationFilter";
 export default function ProductsPage() {
   const { query, setData } = useFilterContext();
   useEffect(() => {
-    // Fetch products by category or search for products
     axios.get(query).then((res) => {
       setData(res.data || { products: [] });
     });

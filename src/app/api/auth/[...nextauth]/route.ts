@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
           console.error("Credentials required");
           return null;
         }
-        // Include hidden values here
+        
         const data = {
           username: credentials.username,
           password: credentials.password,

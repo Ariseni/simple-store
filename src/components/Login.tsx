@@ -37,12 +37,8 @@ export default function Login({ isDropdown }: LoginProps) {
       } right-0 shadow-2xl z-10`}
     >
       <form onSubmit={handleSubmit} className="flex gap-5 flex-col">
-        <FormInput text="Username" defaultValue="emilys" id="usernameInput" />
-        <FormInput
-          text="Password"
-          defaultValue="emilyspass"
-          id="passwordInput"
-        />
+        <FormInput text="Username" id="usernameInput" />
+        <FormInput text="Password" id="passwordInput" />
         <Button
           type="submit"
           className="bg-blue-500 rounded-md py-4 text-white font-bold"
@@ -57,7 +53,7 @@ export default function Login({ isDropdown }: LoginProps) {
 
 type FormInputProps = {
   text: string;
-  defaultValue: string;
+  defaultValue?: string;
   id: string;
 };
 export function FormInput({ text, defaultValue, id }: FormInputProps) {

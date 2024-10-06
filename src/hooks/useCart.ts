@@ -31,7 +31,6 @@ export function useCart() {
   }
 
   function removeProduct(id: number) {
-    // Create a shallow copy of the cart
     const updatedCart = [...cart];
 
     const existingProductIndex = cart.findIndex((item) => item.id === id);

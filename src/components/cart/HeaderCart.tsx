@@ -7,7 +7,6 @@ import { CartItem, useCart } from "@/hooks/useCart";
 export default function Cart() {
   const { cart } = useCart();
 
-  // Calculate total quantity of items in the cart
   const totalQuantity =
     cart.reduce((acc: number, item: CartItem) => acc + item.quantity, 0) || 0;
 

@@ -22,7 +22,6 @@ export function ProductFilter() {
   const [showFilters, setShowFilters] = useState(true);
   const [categories, setCategories] = useState<string[]>([]);
 
-  // Debounce effect for search term
   useEffect(() => {
     const handler = setTimeout(() => {
       setSearchTerm(localSearch);
@@ -38,7 +37,6 @@ export function ProductFilter() {
   }
 
   useEffect(() => {
-    // Fetch products by category or search for products
     axios.get("/api/categories").then((res) => {
       setCategories(res.data || { products: [] });
     });
@@ -53,7 +51,6 @@ export function ProductFilter() {
           text={showFilters ? "X" : ">>"}
         />
       </div>
-      {/* Filter Section */}
       {showFilters && (
         <div className="mb-6 p-4 bg-white shadow-lg rounded-lg">
           {/* Category Filter */}

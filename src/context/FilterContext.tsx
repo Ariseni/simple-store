@@ -14,7 +14,6 @@ export enum SortOptions {
   PRICE_DESC = "Price descending",
 }
 
-// Define the shape of the filter context
 interface FilterContextType {
   category: string;
   setCategory: (category: string) => void;
@@ -35,12 +34,9 @@ interface FilterContextType {
   setSortBy: (sort: SortOptions) => void;
 }
 
-// Create the context
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
-// Filter Provider component
 export function FilterProvider({ children }: { children: ReactNode }) {
-  // States for filters
   const [category, setCategory] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [minPrice, setMinPrice] = useState<number>();
@@ -113,7 +109,6 @@ export function FilterProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Custom hook to use the Filter Context
 export function useFilterContext() {
   const context = useContext(FilterContext);
   if (!context) {
